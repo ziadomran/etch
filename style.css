@@ -14,3 +14,12 @@
 
         }
 
+.number {
+   margin: 0% 40% ;
+}
+
+.buttons{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
