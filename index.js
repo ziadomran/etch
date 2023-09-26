@@ -6,8 +6,9 @@ const clear = document.querySelector('.clear');
 const slider = document.querySelector('.slider');
 let para = document.querySelector('p');
 let mousedown = false;
-// document.body.onmousedown = () => (mousedown = true)
-// document.body.onmouseup = () => (mousedown = false)
+// document.body.addEventListener('dragstart', () => mousedown = true);
+// document.body.addEventListener('mouseup', () => mousedown = false);
+
 let mode;
 
 color.addEventListener("click", () => mode = rainbowMode)
@@ -24,9 +25,18 @@ function makeGrid(number){
         container.style.width = `960px`; //grid width 960px
         container.style.height = `960px`; //grid height 960px
         create.addEventListener('mousedown', changeColor);
+        //Listener on container mousedown/mouseup events to enable click and hover at the same time,
         container.addEventListener('mousedown', () => mousedown = true);
         container.addEventListener('mouseup', () => mousedown = false);
-       create.addEventListener('mouseover', changeColor);
+        container.addEventListener('dragstart', event => {
+            event.preventDefault();
+          });
+          
+          container.addEventListener('drop', event => {
+            event.preventDefault();
+          })
+
+       create.addEventListener('mouseenter', changeColor);
         container.appendChild(create);
     }
 }
@@ -56,6 +66,7 @@ function eraseGrid(){
     }
 }
 
+//Used button to enter Number of Squares, but figured a slider would be more user-friendly. Kept the button for references
 //Numbers Button
 // const button = document.querySelector('.number')
 // button.addEventListener('click', () => {
@@ -70,7 +81,7 @@ function eraseGrid(){
 // })
 
 function changeColor(event){
-    if (event.type === 'mouseover' && !mousedown) return
+    if (event.type === 'mouseenter' && !mousedown) return
     else if (mode === rainbowMode)
 event.target.style.backgroundColor = rainbowMode();
 else if (mode === 'blackMode')
