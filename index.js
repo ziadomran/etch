@@ -3,7 +3,11 @@ const color = document.querySelector('.colors');
 const black = document.querySelector('.black');
 const erase = document.querySelector('.erase');
 const clear = document.querySelector('.clear');
-
+const slider = document.querySelector('.slider');
+let para = document.querySelector('p');
+let mousedown = false;
+// document.body.onmousedown = () => (mousedown = true)
+// document.body.onmouseup = () => (mousedown = false)
 let mode;
 
 color.addEventListener("click", () => mode = rainbowMode)
@@ -19,10 +23,20 @@ function makeGrid(number){
         container.style.gridTemplateRows = `repeat(${number}, auto)`; //create "Number" number of rows
         container.style.width = `960px`; //grid width 960px
         container.style.height = `960px`; //grid height 960px
-        create.addEventListener('mouseover', changeColor);
+        create.addEventListener('mousedown', changeColor);
+        container.addEventListener('mousedown', () => mousedown = true);
+        container.addEventListener('mouseup', () => mousedown = false);
+       create.addEventListener('mouseover', changeColor);
         container.appendChild(create);
     }
 }
+
+slider.addEventListener('change', () => {
+let square = slider.value
+para.textContent = slider.value + " x " + slider.value;
+eraseGrid();
+makeGrid(square)});
+
 
 function randomColor(){
     return Math.floor(Math.random() *256);
@@ -43,20 +57,21 @@ function eraseGrid(){
 }
 
 //Numbers Button
-const button = document.querySelector('.number')
-button.addEventListener('click', () => {
-    const newNumber = +prompt("Enter a number: ")
-    if (newNumber === undefined || newNumber === null) return alert("Please select a number");
-    else if (!Number.isInteger(newNumber)) return alert("Please select an Integer number")
-    else if (newNumber > 100) return alert("Number is too large, will crash your browser");
-    else{
-    eraseGrid();
-    makeGrid(newNumber);
-    }
-})
+// const button = document.querySelector('.number')
+// button.addEventListener('click', () => {
+//     const newNumber = +prompt("Enter a number: ")
+//     if (newNumber === undefined || newNumber === null) return alert("Please select a number");
+//     else if (!Number.isInteger(newNumber)) return alert("Please select an Integer number")
+//     else if (newNumber > 100) return alert("Number is too large, will crash your browser");
+//     else{
+//     eraseGrid();
+//     makeGrid(newNumber);
+//     }
+// })
 
 function changeColor(event){
-    if (mode === rainbowMode)
+    if (event.type === 'mouseover' && !mousedown) return
+    else if (mode === rainbowMode)
 event.target.style.backgroundColor = rainbowMode();
 else if (mode === 'blackMode')
     event.target.style.backgroundColor = 'black';
